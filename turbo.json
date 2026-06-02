@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": ["VERCEL_PROJECT_PRODUCTION_URL", "VERCEL_URL"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

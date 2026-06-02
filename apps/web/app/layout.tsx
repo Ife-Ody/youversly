@@ -9,6 +9,14 @@ import type { Metadata } from "next"
 import "@workspace/ui/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@workspace/ui/lib/utils"
+import {
+  getSiteUrl,
+  openGraphDescription,
+  siteDescription,
+  siteKeywords,
+  siteName,
+  siteTitle,
+} from "./seo"
 
 const merriweatherHeading = Merriweather({
   subsets: ["latin"],
@@ -30,8 +38,51 @@ const script = Dancing_Script({
 })
 
 export const metadata: Metadata = {
-  title: "Youversly",
-  description: "Create and download shareable Bible verse images.",
+  metadataBase: getSiteUrl(),
+  title: {
+    default: siteTitle,
+    template: `%s | ${siteName}`,
+  },
+  description: siteDescription,
+  applicationName: siteName,
+  keywords: siteKeywords,
+  authors: [{ name: siteName }],
+  creator: siteName,
+  publisher: siteName,
+  category: "Faith and design tools",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: siteTitle,
+    description: openGraphDescription,
+    url: "/",
+    siteName,
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: openGraphDescription,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  manifest: "/manifest.webmanifest",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
 }
 
 export default function RootLayout({
