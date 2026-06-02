@@ -1,0 +1,21 @@
+{
+  "name": "@workspace/bible",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "lint": "eslint",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "typescript": "^5"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
