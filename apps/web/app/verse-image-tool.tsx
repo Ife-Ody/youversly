@@ -289,6 +289,20 @@ export function VerseImageTool() {
                 <h2 className="text-sm font-semibold">Verse</h2>
               </div>
 
+              <Field>
+                <FieldLabel htmlFor="title">Title</FieldLabel>
+                <Input
+                  id="title"
+                  value={title}
+                  onChange={(event) => setTitle(event.target.value)}
+                  placeholder={defaultTitle}
+                  className="border-white/15 bg-white/5 text-white placeholder:text-white/35"
+                />
+                <FieldDescription className="text-white/45">
+                  This appears at the top of the image.
+                </FieldDescription>
+              </Field>
+
               <Field data-invalid={!!error}>
                 <FieldLabel htmlFor="reference">Reference</FieldLabel>
                 <Input
@@ -303,20 +317,6 @@ export function VerseImageTool() {
                   Ranges are determined from the reference automatically.
                 </FieldDescription>
                 <FieldError>{error}</FieldError>
-              </Field>
-
-              <Field>
-                <FieldLabel htmlFor="title">Title</FieldLabel>
-                <Input
-                  id="title"
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                  placeholder={defaultTitle}
-                  className="border-white/15 bg-white/5 text-white placeholder:text-white/35"
-                />
-                <FieldDescription className="text-white/45">
-                  This appears at the top of the image.
-                </FieldDescription>
               </Field>
 
               <Field>
@@ -343,6 +343,19 @@ export function VerseImageTool() {
               </Field>
 
               <Field>
+                <FieldLabel htmlFor="signature">Signature</FieldLabel>
+                <Input
+                  id="signature"
+                  value={signature}
+                  onChange={(event) => setSignature(event.target.value)}
+                  placeholder="Youversly"
+                  className="border-white/15 bg-white/5 text-white placeholder:text-white/35"
+                />
+              </Field>
+
+              <Separator className="bg-white/10" />
+
+              <Field>
                 <FieldLabel>Aspect</FieldLabel>
                 <ToggleGroup
                   type="single"
@@ -366,19 +379,6 @@ export function VerseImageTool() {
                   ))}
                 </ToggleGroup>
               </Field>
-
-              <Field>
-                <FieldLabel htmlFor="signature">Signature</FieldLabel>
-                <Input
-                  id="signature"
-                  value={signature}
-                  onChange={(event) => setSignature(event.target.value)}
-                  placeholder="Youversly"
-                  className="border-white/15 bg-white/5 text-white placeholder:text-white/35"
-                />
-              </Field>
-
-              <Separator className="bg-white/10" />
 
               <Field>
                 <FieldLabel>Template</FieldLabel>
