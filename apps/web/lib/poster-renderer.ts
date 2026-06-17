@@ -1,13 +1,40 @@
 import type { BibleVerse } from "@workspace/bible"
 
-export type PosterTemplateId = "garden" | "rose" | "parchment"
+export type PosterTemplateId =
+  | "garden"
+  | "rose"
+  | "parchment"
+  | "mist"
+  | "daybreak"
 export type PosterAspect = "square" | "portrait"
+
+type ColorStop = {
+  offset: number
+  color: string
+}
+
+type LinearBackgroundLayer = {
+  type: "linear"
+  from: readonly [number, number]
+  to: readonly [number, number]
+  stops: ColorStop[]
+}
+
+type RadialBackgroundLayer = {
+  type: "radial"
+  center: readonly [number, number]
+  radius: number
+  stops: ColorStop[]
+}
+
+type PosterBackgroundLayer = LinearBackgroundLayer | RadialBackgroundLayer
 
 export interface PosterTemplate {
   id: PosterTemplateId
   name: string
   description: string
-  background: [string, string, string]
+  background: PosterBackgroundLayer[]
+  previewBackground: string
   foreground: string
   muted: string
   border: string
@@ -22,6 +49,7 @@ export interface PosterPayload {
   signature: string
   templateId: PosterTemplateId
   aspect: PosterAspect
+  verseFontScale?: number
   referenceFontFamily?: string
 }
 
@@ -35,7 +63,19 @@ const DEFAULT_TEMPLATE: PosterTemplate = {
   id: "garden",
   name: "Garden",
   description: "Muted green with a soft devotional finish.",
-  background: ["#b7dcc7", "#558972", "#113d31"],
+  background: [
+    {
+      type: "linear",
+      from: [0, 0],
+      to: [1, 1],
+      stops: [
+        { offset: 0, color: "#b7dcc7" },
+        { offset: 0.52, color: "#558972" },
+        { offset: 1, color: "#113d31" },
+      ],
+    },
+  ],
+  previewBackground: "linear-gradient(135deg, #b7dcc7, #558972 52%, #113d31)",
   foreground: "#fffaf0",
   muted: "rgba(255, 250, 240, 0.78)",
   border: "rgba(255, 250, 240, 0.74)",
@@ -43,13 +83,29 @@ const DEFAULT_TEMPLATE: PosterTemplate = {
   grain: "rgba(15, 45, 37, 0.16)",
 }
 
+export const DEFAULT_VERSE_FONT_SCALE = 100
+export const MIN_VERSE_FONT_SCALE = 80
+export const MAX_VERSE_FONT_SCALE = 130
+
 export const POSTER_TEMPLATES: PosterTemplate[] = [
   DEFAULT_TEMPLATE,
   {
     id: "rose",
     name: "Rose",
     description: "Dusky rose fading into deep wine.",
-    background: ["#c6b3ae", "#8d5c61", "#301326"],
+    background: [
+      {
+        type: "linear",
+        from: [0, 0],
+        to: [1, 1],
+        stops: [
+          { offset: 0, color: "#c6b3ae" },
+          { offset: 0.52, color: "#8d5c61" },
+          { offset: 1, color: "#301326" },
+        ],
+      },
+    ],
+    previewBackground: "linear-gradient(135deg, #c6b3ae, #8d5c61 52%, #301326)",
     foreground: "#fff7ef",
     muted: "rgba(255, 247, 239, 0.78)",
     border: "rgba(255, 247, 239, 0.7)",
@@ -60,12 +116,130 @@ export const POSTER_TEMPLATES: PosterTemplate[] = [
     id: "parchment",
     name: "Parchment",
     description: "Light editorial texture for calm sharing.",
-    background: ["#f4ecdd", "#d8c2a1", "#77654b"],
+    background: [
+      {
+        type: "linear",
+        from: [0, 0],
+        to: [1, 1],
+        stops: [
+          { offset: 0, color: "#f4ecdd" },
+          { offset: 0.52, color: "#d8c2a1" },
+          { offset: 1, color: "#77654b" },
+        ],
+      },
+    ],
+    previewBackground: "linear-gradient(135deg, #f4ecdd, #d8c2a1 52%, #77654b)",
     foreground: "#30291f",
     muted: "rgba(48, 41, 31, 0.7)",
     border: "rgba(48, 41, 31, 0.42)",
     accent: "#8c6541",
     grain: "rgba(85, 65, 42, 0.12)",
+  },
+  {
+    id: "mist",
+    name: "Mist",
+    description: "Layered teal, ink, and violet atmosphere.",
+    background: [
+      {
+        type: "linear",
+        from: [0, 0],
+        to: [1, 1],
+        stops: [
+          { offset: 0, color: "#061b35" },
+          { offset: 0.5, color: "#162f4a" },
+          { offset: 1, color: "#070713" },
+        ],
+      },
+      {
+        type: "radial",
+        center: [0.14, 0.62],
+        radius: 0.8,
+        stops: [
+          { offset: 0, color: "rgba(48, 139, 139, 0.82)" },
+          { offset: 0.48, color: "rgba(38, 108, 123, 0.34)" },
+          { offset: 1, color: "rgba(48, 139, 139, 0)" },
+        ],
+      },
+      {
+        type: "radial",
+        center: [0.58, 0.4],
+        radius: 0.72,
+        stops: [
+          { offset: 0, color: "rgba(42, 72, 111, 0.56)" },
+          { offset: 0.62, color: "rgba(34, 55, 91, 0.26)" },
+          { offset: 1, color: "rgba(42, 72, 111, 0)" },
+        ],
+      },
+      {
+        type: "radial",
+        center: [0.9, 0.13],
+        radius: 0.54,
+        stops: [
+          { offset: 0, color: "rgba(79, 37, 96, 0.44)" },
+          { offset: 1, color: "rgba(79, 37, 96, 0)" },
+        ],
+      },
+      {
+        type: "linear",
+        from: [0, 0],
+        to: [0, 1],
+        stops: [
+          { offset: 0, color: "rgba(3, 9, 20, 0.45)" },
+          { offset: 0.54, color: "rgba(3, 9, 20, 0)" },
+          { offset: 1, color: "rgba(3, 9, 20, 0.28)" },
+        ],
+      },
+    ],
+    previewBackground:
+      "radial-gradient(circle at 14% 62%, rgba(48, 139, 139, 0.82), rgba(38, 108, 123, 0.34) 48%, transparent 72%), radial-gradient(circle at 58% 40%, rgba(42, 72, 111, 0.56), transparent 70%), radial-gradient(circle at 90% 13%, rgba(79, 37, 96, 0.44), transparent 58%), linear-gradient(135deg, #061b35, #162f4a 50%, #070713)",
+    foreground: "#f5f0e6",
+    muted: "rgba(245, 240, 230, 0.76)",
+    border: "rgba(245, 240, 230, 0.58)",
+    accent: "#d7bd8c",
+    grain: "rgba(226, 244, 236, 0.1)",
+  },
+  {
+    id: "daybreak",
+    name: "Daybreak",
+    description: "Soft sunrise gradients with quiet depth.",
+    background: [
+      {
+        type: "linear",
+        from: [0, 0],
+        to: [1, 1],
+        stops: [
+          { offset: 0, color: "#f3d1ba" },
+          { offset: 0.46, color: "#d39a83" },
+          { offset: 1, color: "#394b65" },
+        ],
+      },
+      {
+        type: "radial",
+        center: [0.2, 0.14],
+        radius: 0.66,
+        stops: [
+          { offset: 0, color: "rgba(255, 244, 199, 0.72)" },
+          { offset: 0.48, color: "rgba(241, 174, 128, 0.36)" },
+          { offset: 1, color: "rgba(241, 174, 128, 0)" },
+        ],
+      },
+      {
+        type: "radial",
+        center: [0.82, 0.82],
+        radius: 0.7,
+        stops: [
+          { offset: 0, color: "rgba(45, 82, 111, 0.52)" },
+          { offset: 1, color: "rgba(45, 82, 111, 0)" },
+        ],
+      },
+    ],
+    previewBackground:
+      "radial-gradient(circle at 20% 14%, rgba(255, 244, 199, 0.72), rgba(241, 174, 128, 0.36) 48%, transparent 70%), radial-gradient(circle at 82% 82%, rgba(45, 82, 111, 0.52), transparent 68%), linear-gradient(135deg, #f3d1ba, #d39a83 46%, #394b65)",
+    foreground: "#fffaf0",
+    muted: "rgba(255, 250, 240, 0.76)",
+    border: "rgba(255, 250, 240, 0.58)",
+    accent: "#f2d28f",
+    grain: "rgba(88, 54, 42, 0.12)",
   },
 ]
 
@@ -112,6 +286,7 @@ export function renderVersePoster(
   context.fillText(payload.reference, size.width / 2, size.height * 0.205)
 
   const quote = payload.verses.map((verse) => verse.text).join(" ")
+  const verseFontScale = normalizeVerseFontScale(payload.verseFontScale) / 100
   const textBox = {
     x: size.width * 0.14,
     y: size.height * 0.28,
@@ -121,8 +296,8 @@ export function renderVersePoster(
   const fit = fitTextToBox(context, quote, {
     maxWidth: textBox.width,
     maxHeight: textBox.height,
-    maxFontSize: Math.round(size.width * 0.072),
-    minFontSize: Math.round(size.width * 0.034),
+    maxFontSize: Math.round(size.width * 0.072 * verseFontScale),
+    minFontSize: Math.round(size.width * 0.034 * verseFontScale),
     fontFamily: '"Merriweather", Georgia, serif',
     fontWeight: "400",
   })
@@ -193,6 +368,17 @@ export function fitTextToBox(
   }
 }
 
+export function normalizeVerseFontScale(value: unknown) {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return DEFAULT_VERSE_FONT_SCALE
+  }
+
+  return Math.min(
+    MAX_VERSE_FONT_SCALE,
+    Math.max(MIN_VERSE_FONT_SCALE, Math.round(value))
+  )
+}
+
 export function wrapTextLines(
   context: Pick<CanvasRenderingContext2D, "measureText">,
   text: string,
@@ -234,12 +420,31 @@ function drawBackground(
   height: number,
   template: PosterTemplate
 ) {
-  const gradient = context.createLinearGradient(0, 0, width, height)
-  gradient.addColorStop(0, template.background[0])
-  gradient.addColorStop(0.52, template.background[1])
-  gradient.addColorStop(1, template.background[2])
-  context.fillStyle = gradient
-  context.fillRect(0, 0, width, height)
+  template.background.forEach((layer) => {
+    const gradient =
+      layer.type === "linear"
+        ? context.createLinearGradient(
+            layer.from[0] * width,
+            layer.from[1] * height,
+            layer.to[0] * width,
+            layer.to[1] * height
+          )
+        : context.createRadialGradient(
+            layer.center[0] * width,
+            layer.center[1] * height,
+            0,
+            layer.center[0] * width,
+            layer.center[1] * height,
+            layer.radius * Math.max(width, height)
+          )
+
+    layer.stops.forEach((stop) => {
+      gradient.addColorStop(stop.offset, stop.color)
+    })
+
+    context.fillStyle = gradient
+    context.fillRect(0, 0, width, height)
+  })
 
   context.fillStyle = template.grain
   for (let y = 0; y < height; y += 8) {

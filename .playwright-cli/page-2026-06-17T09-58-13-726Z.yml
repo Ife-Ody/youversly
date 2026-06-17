@@ -1,0 +1,83 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - img [ref=e7]
+        - generic [ref=e11]:
+          - heading "Youversly" [level=1] [ref=e12]
+          - paragraph [ref=e13]: Bible verse image studio
+      - generic [ref=e14]:
+        - generic [ref=e15]: 1080 x 1080
+        - button "JPG" [disabled]:
+          - img
+          - text: JPG
+        - button "PNG" [disabled]:
+          - img
+          - text: PNG
+    - generic [ref=e16]:
+      - complementary [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - img [ref=e20]
+            - heading "Verse" [level=2] [ref=e24]
+          - group [ref=e25]:
+            - generic [ref=e26]: Title
+            - textbox "Title" [ref=e27]:
+              - /placeholder: 17th June 2026
+              - text: 17th June 2026
+            - paragraph [ref=e28]: This appears at the top of the image.
+          - group [ref=e29]:
+            - generic [ref=e30]: Reference
+            - textbox "Reference" [ref=e31]:
+              - /placeholder: John 1:1 or John 1:1-3
+              - text: Psalm 42:1-2
+            - paragraph [ref=e32]: Ranges are determined from the reference automatically.
+          - group [ref=e33]:
+            - generic [ref=e34]: Version
+            - combobox [ref=e35] [cursor=pointer]:
+              - img
+            - combobox [ref=e36]
+          - group [ref=e37]:
+            - generic [ref=e38]: Signature
+            - textbox "Signature" [ref=e39]:
+              - /placeholder: Youversly
+              - text: Youversly
+          - group [ref=e40]:
+            - generic [ref=e41]: Aspect
+            - group [ref=e42]:
+              - radio "1:1" [checked] [ref=e43] [cursor=pointer]
+              - radio "4:5" [ref=e44] [cursor=pointer]
+          - group [ref=e45]:
+            - generic [ref=e46]:
+              - generic [ref=e47]: Text size
+              - status [ref=e48]: 100%
+            - slider "Text size" [ref=e49]: "100"
+            - paragraph [ref=e50]: Adjusts the verse text while keeping the default fit.
+          - group [ref=e51]:
+            - generic [ref=e52]: Template
+            - generic [ref=e53]:
+              - button "Garden Muted green with a soft devotional finish." [ref=e54] [cursor=pointer]:
+                - generic [ref=e56]:
+                  - generic [ref=e57]: Garden
+                  - generic [ref=e58]: Muted green with a soft devotional finish.
+              - button "Rose Dusky rose fading into deep wine." [ref=e59] [cursor=pointer]:
+                - generic [ref=e61]:
+                  - generic [ref=e62]: Rose
+                  - generic [ref=e63]: Dusky rose fading into deep wine.
+              - button "Parchment Light editorial texture for calm sharing." [ref=e64] [cursor=pointer]:
+                - generic [ref=e66]:
+                  - generic [ref=e67]: Parchment
+                  - generic [ref=e68]: Light editorial texture for calm sharing.
+              - button "Mist Layered teal, ink, and violet atmosphere." [ref=e69] [cursor=pointer]:
+                - generic [ref=e71]:
+                  - generic [ref=e72]: Mist
+                  - generic [ref=e73]: Layered teal, ink, and violet atmosphere.
+              - button "Daybreak Soft sunrise gradients with quiet depth." [ref=e74] [cursor=pointer]:
+                - generic [ref=e76]:
+                  - generic [ref=e77]: Daybreak
+                  - generic [ref=e78]: Soft sunrise gradients with quiet depth.
+      - generic [ref=e81]:
+        - img [ref=e82]
+        - generic [ref=e87]:
+          - heading "Preview" [level=2] [ref=e88]
+          - paragraph [ref=e89]: Enter a valid passage to render.

@@ -34,7 +34,11 @@ import {
 } from "@workspace/ui/components/toggle-group"
 import { cn } from "@workspace/ui/lib/utils"
 import {
+  DEFAULT_VERSE_FONT_SCALE,
   getPosterSize,
+  MAX_VERSE_FONT_SCALE,
+  MIN_VERSE_FONT_SCALE,
+  normalizeVerseFontScale,
   POSTER_TEMPLATES,
   renderVersePoster,
   type PosterAspect,
@@ -65,6 +69,7 @@ interface SavedEditorState {
   title?: string
   templateId?: PosterTemplateId
   aspect?: PosterAspect
+  verseFontScale?: number
   signature?: string
 }
 
@@ -76,6 +81,7 @@ export function VerseImageTool() {
   const [title, setTitle] = useState(defaultTitle)
   const [templateId, setTemplateId] = useState<PosterTemplateId>("garden")
   const [aspect, setAspect] = useState<PosterAspect>("square")
+  const [verseFontScale, setVerseFontScale] = useState(DEFAULT_VERSE_FONT_SCALE)
   const [signature, setSignature] = useState("Youversly")
   const [passage, setPassage] = useState<ResolvedPassage | null>(null)
   const [error, setError] = useState("")
@@ -103,6 +109,9 @@ export function VerseImageTool() {
       if (savedState?.aspect) {
         setAspect(savedState.aspect)
       }
+      if (typeof savedState?.verseFontScale === "number") {
+        setVerseFontScale(normalizeVerseFontScale(savedState.verseFontScale))
+      }
       if (typeof savedState?.signature === "string") {
         setSignature(savedState.signature)
       }
@@ -126,6 +135,7 @@ export function VerseImageTool() {
         title,
         templateId,
         aspect,
+        verseFontScale,
         signature,
       } satisfies SavedEditorState)
     )
@@ -136,6 +146,7 @@ export function VerseImageTool() {
     signature,
     templateId,
     title,
+    verseFontScale,
     version,
   ])
 
@@ -201,6 +212,7 @@ export function VerseImageTool() {
         signature: signature || "Youversly",
         templateId,
         aspect,
+        verseFontScale,
         referenceFontFamily:
           getComputedStyle(document.documentElement)
             .getPropertyValue("--font-script")
@@ -214,7 +226,15 @@ export function VerseImageTool() {
     return () => {
       isCancelled = true
     }
-  }, [aspect, defaultTitle, passage, signature, templateId, title])
+  }, [
+    aspect,
+    defaultTitle,
+    passage,
+    signature,
+    templateId,
+    title,
+    verseFontScale,
+  ])
 
   function download(format: "png" | "jpeg") {
     const canvas = canvasRef.current
@@ -381,6 +401,35 @@ export function VerseImageTool() {
               </Field>
 
               <Field>
+                <div className="flex items-center justify-between gap-3">
+                  <FieldLabel htmlFor="verse-font-size">Text size</FieldLabel>
+                  <output
+                    htmlFor="verse-font-size"
+                    className="text-xs font-medium text-white/60"
+                  >
+                    {verseFontScale}%
+                  </output>
+                </div>
+                <input
+                  id="verse-font-size"
+                  type="range"
+                  min={MIN_VERSE_FONT_SCALE}
+                  max={MAX_VERSE_FONT_SCALE}
+                  step={5}
+                  value={verseFontScale}
+                  onChange={(event) =>
+                    setVerseFontScale(
+                      normalizeVerseFontScale(event.currentTarget.valueAsNumber)
+                    )
+                  }
+                  className="h-2 w-full accent-white"
+                />
+                <FieldDescription className="text-white/45">
+                  Adjusts the verse text while keeping the default fit.
+                </FieldDescription>
+              </Field>
+
+              <Field>
                 <FieldLabel>Template</FieldLabel>
                 <div className="grid grid-cols-1 gap-2">
                   {POSTER_TEMPLATES.map((template) => (
@@ -397,7 +446,7 @@ export function VerseImageTool() {
                       <span
                         className="block size-12 rounded-md border border-white/20"
                         style={{
-                          background: `linear-gradient(135deg, ${template.background[0]}, ${template.background[1]} 52%, ${template.background[2]})`,
+                          background: template.previewBackground,
                         }}
                       />
                       <span className="min-w-0">
@@ -500,6 +549,10 @@ function readSavedEditorState(): SavedEditorState | null {
         ? value.templateId
         : undefined,
       aspect: isPosterAspect(value.aspect) ? value.aspect : undefined,
+      verseFontScale:
+        typeof value.verseFontScale === "number"
+          ? normalizeVerseFontScale(value.verseFontScale)
+          : undefined,
       signature:
         typeof value.signature === "string" ? value.signature : undefined,
     }

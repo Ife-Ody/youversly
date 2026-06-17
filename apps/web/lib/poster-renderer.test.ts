@@ -1,5 +1,12 @@
 import { describe, expect, it } from "bun:test"
-import { fitTextToBox, wrapTextLines } from "./poster-renderer"
+import {
+  MAX_VERSE_FONT_SCALE,
+  MIN_VERSE_FONT_SCALE,
+  POSTER_TEMPLATES,
+  fitTextToBox,
+  normalizeVerseFontScale,
+  wrapTextLines,
+} from "./poster-renderer"
 
 function makeMeasureContext(widthPerCharacter = 9) {
   return {
@@ -57,5 +64,26 @@ describe("poster text layout", () => {
 
     expect(fit.fontSize).toBeLessThan(70)
     expect(fit.lines.length * fit.lineHeight).toBeLessThanOrEqual(170)
+  })
+
+  it("keeps user font-size overrides within the supported range", () => {
+    expect(normalizeVerseFontScale(70)).toBe(MIN_VERSE_FONT_SCALE)
+    expect(normalizeVerseFontScale(115.4)).toBe(115)
+    expect(normalizeVerseFontScale(140)).toBe(MAX_VERSE_FONT_SCALE)
+    expect(normalizeVerseFontScale(Number.NaN)).toBe(100)
+  })
+
+  it("keeps template choices compact while offering layered backgrounds", () => {
+    const mistTemplate = POSTER_TEMPLATES.find(
+      (template) => template.id === "mist"
+    )
+
+    expect(POSTER_TEMPLATES).toHaveLength(5)
+    expect(
+      mistTemplate?.background.some((layer) => layer.type === "radial")
+    ).toBe(true)
+    expect(
+      mistTemplate?.background.some((layer) => layer.type === "linear")
+    ).toBe(true)
   })
 })
