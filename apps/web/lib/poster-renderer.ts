@@ -85,7 +85,7 @@ const DEFAULT_TEMPLATE: PosterTemplate = {
 
 export const DEFAULT_VERSE_FONT_SCALE = 100
 export const MIN_VERSE_FONT_SCALE = 80
-export const MAX_VERSE_FONT_SCALE = 200
+export const MAX_VERSE_FONT_SCALE = 500
 
 export const POSTER_TEMPLATES: PosterTemplate[] = [
   DEFAULT_TEMPLATE,

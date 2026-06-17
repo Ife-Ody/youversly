@@ -87,8 +87,8 @@ describe("poster text layout", () => {
 
   it("keeps user font-size overrides within the supported range", () => {
     expect(normalizeVerseFontScale(70)).toBe(MIN_VERSE_FONT_SCALE)
-    expect(normalizeVerseFontScale(175.4)).toBe(175)
-    expect(normalizeVerseFontScale(240)).toBe(MAX_VERSE_FONT_SCALE)
+    expect(normalizeVerseFontScale(425.4)).toBe(425)
+    expect(normalizeVerseFontScale(640)).toBe(MAX_VERSE_FONT_SCALE)
     expect(normalizeVerseFontScale(Number.NaN)).toBe(100)
   })
 
