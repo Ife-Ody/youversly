@@ -1,11 +1,14 @@
 import { describe, expect, it } from "bun:test"
 import {
-  MAX_VERSE_FONT_SCALE,
-  MIN_VERSE_FONT_SCALE,
+  DEFAULT_VERSE_FONT_SIZE,
+  MAX_VERSE_FONT_SIZE,
+  MIN_VERSE_FONT_SIZE,
   POSTER_TEMPLATES,
   fitTextToBox,
   getCenteredTextBlockStartY,
-  normalizeVerseFontScale,
+  layoutTextAtFontSize,
+  normalizeVerseFontSize,
+  verseFontSizeFromScale,
   wrapTextLines,
 } from "./poster-renderer"
 
@@ -67,30 +70,33 @@ describe("poster text layout", () => {
     expect(fit.lines.length * fit.lineHeight).toBeLessThanOrEqual(170)
   })
 
-  it("allows larger requested text while preserving auto-fit for long passages", () => {
+  it("uses the requested manual font size without fitting it down", () => {
     const context = makeMeasureContext(9)
-    const fit = fitTextToBox(
+    const fit = layoutTextAtFontSize(
       context,
       "As the hart panteth after the water brooks, so panteth my soul after thee, O God. My soul thirsteth for God, for the living God.",
       {
         maxWidth: 420,
-        maxHeight: 170,
-        maxFontSize: 140,
-        minFontSize: 28,
+        fontSize: 140,
         fontFamily: "Georgia",
         fontWeight: "400",
       }
     )
 
-    expect(fit.fontSize).toBeLessThan(140)
-    expect(fit.lines.length * fit.lineHeight).toBeLessThanOrEqual(170)
+    expect(fit.fontSize).toBe(140)
+    expect(fit.lines.length * fit.lineHeight).toBeGreaterThan(170)
   })
 
-  it("keeps user font-size overrides within the supported range", () => {
-    expect(normalizeVerseFontScale(70)).toBe(MIN_VERSE_FONT_SCALE)
-    expect(normalizeVerseFontScale(425.4)).toBe(425)
-    expect(normalizeVerseFontScale(640)).toBe(MAX_VERSE_FONT_SCALE)
-    expect(normalizeVerseFontScale(Number.NaN)).toBe(100)
+  it("keeps user font-size overrides within the supported px range", () => {
+    expect(normalizeVerseFontSize(12)).toBe(MIN_VERSE_FONT_SIZE)
+    expect(normalizeVerseFontSize(425.4)).toBe(425)
+    expect(normalizeVerseFontSize(640)).toBe(MAX_VERSE_FONT_SIZE)
+    expect(normalizeVerseFontSize(Number.NaN)).toBe(DEFAULT_VERSE_FONT_SIZE)
+  })
+
+  it("migrates legacy scale values to pixel font sizes", () => {
+    expect(verseFontSizeFromScale(100)).toBe(DEFAULT_VERSE_FONT_SIZE)
+    expect(verseFontSizeFromScale(500)).toBe(390)
   })
 
   it("centers fitted verse text inside its text box", () => {
