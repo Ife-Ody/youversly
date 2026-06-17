@@ -66,6 +66,25 @@ describe("poster text layout", () => {
     expect(fit.lines.length * fit.lineHeight).toBeLessThanOrEqual(170)
   })
 
+  it("allows larger requested text while preserving auto-fit for long passages", () => {
+    const context = makeMeasureContext(9)
+    const fit = fitTextToBox(
+      context,
+      "As the hart panteth after the water brooks, so panteth my soul after thee, O God. My soul thirsteth for God, for the living God.",
+      {
+        maxWidth: 420,
+        maxHeight: 170,
+        maxFontSize: 140,
+        minFontSize: 28,
+        fontFamily: "Georgia",
+        fontWeight: "400",
+      }
+    )
+
+    expect(fit.fontSize).toBeLessThan(140)
+    expect(fit.lines.length * fit.lineHeight).toBeLessThanOrEqual(170)
+  })
+
   it("keeps user font-size overrides within the supported range", () => {
     expect(normalizeVerseFontScale(70)).toBe(MIN_VERSE_FONT_SCALE)
     expect(normalizeVerseFontScale(175.4)).toBe(175)

@@ -297,7 +297,7 @@ export function renderVersePoster(
     maxWidth: textBox.width,
     maxHeight: textBox.height,
     maxFontSize: Math.round(size.width * 0.072 * verseFontScale),
-    minFontSize: Math.round(size.width * 0.034 * verseFontScale),
+    minFontSize: Math.round(size.width * 0.034 * Math.min(verseFontScale, 1)),
     fontFamily: '"Merriweather", Georgia, serif',
     fontWeight: "400",
   })
@@ -316,7 +316,7 @@ export function renderVersePoster(
   drawOpenBook(
     context,
     size.width / 2,
-    size.height * 0.765,
+    size.height * 0.85,
     size.width * 0.15,
     template
   )
