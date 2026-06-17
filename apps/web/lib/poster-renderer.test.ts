@@ -4,6 +4,7 @@ import {
   MIN_VERSE_FONT_SCALE,
   POSTER_TEMPLATES,
   fitTextToBox,
+  getCenteredTextBlockStartY,
   normalizeVerseFontScale,
   wrapTextLines,
 } from "./poster-renderer"
@@ -90,6 +91,30 @@ describe("poster text layout", () => {
     expect(normalizeVerseFontScale(425.4)).toBe(425)
     expect(normalizeVerseFontScale(640)).toBe(MAX_VERSE_FONT_SCALE)
     expect(normalizeVerseFontScale(Number.NaN)).toBe(100)
+  })
+
+  it("centers fitted verse text inside its text box", () => {
+    expect(
+      getCenteredTextBlockStartY({
+        boxY: 100,
+        boxHeight: 300,
+        lineCount: 2,
+        lineHeight: 48,
+        fontSize: 40,
+      })
+    ).toBe(242)
+  })
+
+  it("keeps the centered start inside the box when text fills the space", () => {
+    expect(
+      getCenteredTextBlockStartY({
+        boxY: 100,
+        boxHeight: 96,
+        lineCount: 2,
+        lineHeight: 48,
+        fontSize: 40,
+      })
+    ).toBe(140)
   })
 
   it("keeps template choices compact while offering layered backgrounds", () => {

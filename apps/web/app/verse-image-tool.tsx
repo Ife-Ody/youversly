@@ -34,15 +34,16 @@ import {
 } from "@workspace/ui/components/toggle-group"
 import { cn } from "@workspace/ui/lib/utils"
 import {
-  DEFAULT_VERSE_FONT_SCALE,
+  DEFAULT_VERSE_FONT_SIZE,
   getPosterSize,
-  MAX_VERSE_FONT_SCALE,
-  MIN_VERSE_FONT_SCALE,
-  normalizeVerseFontScale,
+  MAX_VERSE_FONT_SIZE,
+  MIN_VERSE_FONT_SIZE,
+  normalizeVerseFontSize,
   POSTER_TEMPLATES,
   renderVersePoster,
   type PosterAspect,
   type PosterTemplateId,
+  verseFontSizeFromScale,
 } from "@/lib/poster-renderer"
 
 const ASPECT_OPTIONS: Array<{ value: PosterAspect; label: string }> = [
@@ -69,6 +70,7 @@ interface SavedEditorState {
   title?: string
   templateId?: PosterTemplateId
   aspect?: PosterAspect
+  verseFontSize?: number
   verseFontScale?: number
   signature?: string
 }
@@ -81,7 +83,7 @@ export function VerseImageTool() {
   const [title, setTitle] = useState(defaultTitle)
   const [templateId, setTemplateId] = useState<PosterTemplateId>("garden")
   const [aspect, setAspect] = useState<PosterAspect>("square")
-  const [verseFontScale, setVerseFontScale] = useState(DEFAULT_VERSE_FONT_SCALE)
+  const [verseFontSize, setVerseFontSize] = useState(DEFAULT_VERSE_FONT_SIZE)
   const [signature, setSignature] = useState("Youversly")
   const [passage, setPassage] = useState<ResolvedPassage | null>(null)
   const [error, setError] = useState("")
@@ -109,8 +111,8 @@ export function VerseImageTool() {
       if (savedState?.aspect) {
         setAspect(savedState.aspect)
       }
-      if (typeof savedState?.verseFontScale === "number") {
-        setVerseFontScale(normalizeVerseFontScale(savedState.verseFontScale))
+      if (typeof savedState?.verseFontSize === "number") {
+        setVerseFontSize(normalizeVerseFontSize(savedState.verseFontSize))
       }
       if (typeof savedState?.signature === "string") {
         setSignature(savedState.signature)
@@ -135,7 +137,7 @@ export function VerseImageTool() {
         title,
         templateId,
         aspect,
-        verseFontScale,
+        verseFontSize,
         signature,
       } satisfies SavedEditorState)
     )
@@ -146,7 +148,7 @@ export function VerseImageTool() {
     signature,
     templateId,
     title,
-    verseFontScale,
+    verseFontSize,
     version,
   ])
 
@@ -212,7 +214,7 @@ export function VerseImageTool() {
         signature: signature || "Youversly",
         templateId,
         aspect,
-        verseFontScale,
+        verseFontSize,
         referenceFontFamily:
           getComputedStyle(document.documentElement)
             .getPropertyValue("--font-script")
@@ -233,7 +235,7 @@ export function VerseImageTool() {
     signature,
     templateId,
     title,
-    verseFontScale,
+    verseFontSize,
   ])
 
   function download(format: "png" | "jpeg") {
@@ -407,25 +409,25 @@ export function VerseImageTool() {
                     htmlFor="verse-font-size"
                     className="text-xs font-medium text-white/60"
                   >
-                    {verseFontScale}%
+                    {verseFontSize}px
                   </output>
                 </div>
                 <input
                   id="verse-font-size"
                   type="range"
-                  min={MIN_VERSE_FONT_SCALE}
-                  max={MAX_VERSE_FONT_SCALE}
-                  step={5}
-                  value={verseFontScale}
+                  min={MIN_VERSE_FONT_SIZE}
+                  max={MAX_VERSE_FONT_SIZE}
+                  step={1}
+                  value={verseFontSize}
                   onChange={(event) =>
-                    setVerseFontScale(
-                      normalizeVerseFontScale(event.currentTarget.valueAsNumber)
+                    setVerseFontSize(
+                      normalizeVerseFontSize(event.currentTarget.valueAsNumber)
                     )
                   }
                   className="h-2 w-full accent-white"
                 />
                 <FieldDescription className="text-white/45">
-                  Adjusts the verse text while keeping the default fit.
+                  Sets the verse text size in canvas pixels.
                 </FieldDescription>
               </Field>
 
@@ -549,10 +551,12 @@ function readSavedEditorState(): SavedEditorState | null {
         ? value.templateId
         : undefined,
       aspect: isPosterAspect(value.aspect) ? value.aspect : undefined,
-      verseFontScale:
-        typeof value.verseFontScale === "number"
-          ? normalizeVerseFontScale(value.verseFontScale)
-          : undefined,
+      verseFontSize:
+        typeof value.verseFontSize === "number"
+          ? normalizeVerseFontSize(value.verseFontSize)
+          : typeof value.verseFontScale === "number"
+            ? verseFontSizeFromScale(value.verseFontScale)
+            : undefined,
       signature:
         typeof value.signature === "string" ? value.signature : undefined,
     }

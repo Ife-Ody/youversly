@@ -49,7 +49,7 @@ export interface PosterPayload {
   signature: string
   templateId: PosterTemplateId
   aspect: PosterAspect
-  verseFontScale?: number
+  verseFontSize?: number
   referenceFontFamily?: string
 }
 
@@ -83,9 +83,9 @@ const DEFAULT_TEMPLATE: PosterTemplate = {
   grain: "rgba(15, 45, 37, 0.16)",
 }
 
-export const DEFAULT_VERSE_FONT_SCALE = 100
-export const MIN_VERSE_FONT_SCALE = 80
-export const MAX_VERSE_FONT_SCALE = 500
+export const DEFAULT_VERSE_FONT_SIZE = 78
+export const MIN_VERSE_FONT_SIZE = 24
+export const MAX_VERSE_FONT_SIZE = 500
 
 export const POSTER_TEMPLATES: PosterTemplate[] = [
   DEFAULT_TEMPLATE,
@@ -286,21 +286,33 @@ export function renderVersePoster(
   context.fillText(payload.reference, size.width / 2, size.height * 0.205)
 
   const quote = payload.verses.map((verse) => verse.text).join(" ")
-  const verseFontScale = normalizeVerseFontScale(payload.verseFontScale) / 100
+  const verseFontSize =
+    typeof payload.verseFontSize === "number"
+      ? normalizeVerseFontSize(payload.verseFontSize)
+      : null
   const textBox = {
     x: size.width * 0.14,
     y: size.height * 0.28,
     width: size.width * 0.72,
     height: size.height * 0.38,
   }
-  const fit = fitTextToBox(context, quote, {
+  const textOptions = {
     maxWidth: textBox.width,
-    maxHeight: textBox.height,
-    maxFontSize: Math.round(size.width * 0.072 * verseFontScale),
-    minFontSize: Math.round(size.width * 0.034 * Math.min(verseFontScale, 1)),
     fontFamily: '"Merriweather", Georgia, serif',
     fontWeight: "400",
-  })
+  }
+  const fit =
+    verseFontSize === null
+      ? fitTextToBox(context, quote, {
+          ...textOptions,
+          maxHeight: textBox.height,
+          maxFontSize: DEFAULT_VERSE_FONT_SIZE,
+          minFontSize: Math.round(size.width * 0.034),
+        })
+      : layoutTextAtFontSize(context, quote, {
+          ...textOptions,
+          fontSize: verseFontSize,
+        })
 
   context.fillStyle = template.foreground
   context.font = `${fit.fontSize}px "Merriweather", Georgia, serif`
@@ -309,7 +321,13 @@ export function renderVersePoster(
     context,
     fit.lines,
     size.width / 2,
-    textBox.y,
+    getCenteredTextBlockStartY({
+      boxY: textBox.y,
+      boxHeight: textBox.height,
+      lineCount: fit.lines.length,
+      lineHeight: fit.lineHeight,
+      fontSize: fit.fontSize,
+    }),
     fit.lineHeight
   )
 
@@ -368,14 +386,62 @@ export function fitTextToBox(
   }
 }
 
-export function normalizeVerseFontScale(value: unknown) {
+export function layoutTextAtFontSize(
+  context: Pick<CanvasRenderingContext2D, "font" | "measureText">,
+  text: string,
+  options: {
+    maxWidth: number
+    fontSize: number
+    fontFamily: string
+    fontWeight: string
+  }
+): TextFitResult {
+  context.font = `${options.fontWeight} ${options.fontSize}px ${options.fontFamily}`
+  const lineHeight = Math.round(options.fontSize * 1.28)
+
+  return {
+    fontSize: options.fontSize,
+    lineHeight,
+    lines: wrapTextLines(context, `“${text}”`, options.maxWidth),
+  }
+}
+
+export function normalizeVerseFontSize(value: unknown) {
   if (typeof value !== "number" || !Number.isFinite(value)) {
-    return DEFAULT_VERSE_FONT_SCALE
+    return DEFAULT_VERSE_FONT_SIZE
   }
 
   return Math.min(
-    MAX_VERSE_FONT_SCALE,
-    Math.max(MIN_VERSE_FONT_SCALE, Math.round(value))
+    MAX_VERSE_FONT_SIZE,
+    Math.max(MIN_VERSE_FONT_SIZE, Math.round(value))
+  )
+}
+
+export function verseFontSizeFromScale(value: unknown) {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return DEFAULT_VERSE_FONT_SIZE
+  }
+
+  return normalizeVerseFontSize((DEFAULT_VERSE_FONT_SIZE * value) / 100)
+}
+
+export function getCenteredTextBlockStartY(options: {
+  boxY: number
+  boxHeight: number
+  lineCount: number
+  lineHeight: number
+  fontSize: number
+}) {
+  if (options.lineCount <= 0) {
+    return options.boxY + options.boxHeight / 2
+  }
+
+  const blockHeight = options.lineCount * options.lineHeight
+
+  return (
+    options.boxY +
+    Math.max(0, (options.boxHeight - blockHeight) / 2) +
+    options.fontSize
   )
 }
 
