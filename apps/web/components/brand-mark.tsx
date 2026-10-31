@@ -7,13 +7,13 @@ export const brandOrange = "#ffa500"
 export const brandBlack = "#000000"
 
 /** Tight bounds of the mark inside the 1024 logo canvas. */
-export const MARK_VIEWBOX = "168 419 688 162"
-export const MARK_ASPECT = 688 / 162
+export const MARK_VIEWBOX = "168 419 688 187"
+export const MARK_ASPECT = 688 / 187
 
 const LEFT_PAGE =
-  "M 496 465 C 440 433 340 419 240 425 C 212 427 188 433 176 438 Q 168 441 168 450 L 168 505 Q 168 515 178 512 C 240 495 340 491 420 509 C 456 517 484 535 496 565 Z"
+  "M 496 490 C 436 450 340 419 240 425 C 212 427 188 433 176 438 Q 168 441 168 450 L 168 505 Q 168 515 178 512 C 240 495 340 491 420 509 C 460 519 486 548 496 590 Z"
 const RIGHT_PAGE =
-  "M 528 465 C 584 433 684 419 784 425 C 812 427 836 433 848 438 Q 856 441 856 450 L 856 505 Q 856 515 846 512 C 784 495 684 491 604 509 C 568 517 540 535 528 565 Z"
+  "M 528 490 C 588 450 684 419 784 425 C 812 427 836 433 848 438 Q 856 441 856 450 L 856 505 Q 856 515 846 512 C 784 495 684 491 604 509 C 564 519 538 548 528 590 Z"
 
 type BrandMarkProps = {
   /** Rendered width in px. Height follows the mark's aspect ratio. */
@@ -40,7 +40,7 @@ export function BrandMark({
     >
       <path d={LEFT_PAGE} />
       <path d={RIGHT_PAGE} />
-      <rect height="130" rx="12" width="24" x="500" y="451" />
+      <rect height="130" rx="12" width="24" x="500" y="476" />
     </svg>
   )
 }
