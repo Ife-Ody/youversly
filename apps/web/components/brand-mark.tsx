@@ -7,8 +7,8 @@ export const brandOrange = "#ffa500"
 export const brandBlack = "#000000"
 
 /** Tight bounds of the mark inside the 1024 logo canvas. */
-export const MARK_VIEWBOX = "168 419 688 186"
-export const MARK_ASPECT = 688 / 186
+export const MARK_VIEWBOX = "168 419 688 162"
+export const MARK_ASPECT = 688 / 162
 
 const LEFT_PAGE =
   "M 496 465 C 440 433 340 419 240 425 C 212 427 188 433 176 438 Q 168 441 168 450 L 168 505 Q 168 515 178 512 C 240 495 340 491 420 509 C 456 517 484 535 496 565 Z"
@@ -40,7 +40,7 @@ export function BrandMark({
     >
       <path d={LEFT_PAGE} />
       <path d={RIGHT_PAGE} />
-      <rect height="162" rx="12" width="24" x="500" y="443" />
+      <rect height="130" rx="12" width="24" x="500" y="451" />
     </svg>
   )
 }

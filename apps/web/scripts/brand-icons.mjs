@@ -16,16 +16,16 @@ const RIGHT =
 
 async function tile(size, fill) {
   const w = Math.round(size * fill)
-  const hgt = Math.round((w * 186) / 688)
+  const hgt = Math.round((w * 162) / 688)
   const el = h(
     "div",
     { style: { display: "flex", alignItems: "center", justifyContent: "center", width: size, height: size, background: "#ffa500" } },
     h(
       "svg",
-      { xmlns: "http://www.w3.org/2000/svg", viewBox: "168 419 688 186", width: w, height: hgt, fill: "#000" },
+      { xmlns: "http://www.w3.org/2000/svg", viewBox: "168 419 688 162", width: w, height: hgt, fill: "#000" },
       h("path", { d: LEFT }),
       h("path", { d: RIGHT }),
-      h("rect", { x: 500, y: 443, width: 24, height: 162, rx: 12 })
+      h("rect", { x: 500, y: 451, width: 24, height: 130, rx: 12 })
     )
   )
   const res = new ImageResponse(el, { width: size, height: size })
