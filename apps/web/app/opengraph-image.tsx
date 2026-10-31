@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og"
 
+import { BrandTile } from "@/components/brand-mark"
 import { openGraphDescription, siteName } from "./seo"
 
 export const alt =
@@ -69,22 +70,7 @@ export default function OpenGraphImage() {
             gap: 18,
           }}
         >
-          <div
-            style={{
-              alignItems: "center",
-              background: "#fffaf0",
-              borderRadius: 18,
-              color: "#111111",
-              display: "flex",
-              fontSize: 40,
-              fontWeight: 800,
-              height: 72,
-              justifyContent: "center",
-              width: 72,
-            }}
-          >
-            Y
-          </div>
+          <BrandTile size={72} radius={18} />
           <div
             style={{
               display: "flex",

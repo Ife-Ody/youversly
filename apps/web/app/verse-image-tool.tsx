@@ -4,11 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   AiSearch02Icon,
-  BookOpen02Icon,
   CanvasIcon,
   Download01Icon,
 } from "@hugeicons/core-free-icons"
 import type { BibleVersionKey, ResolvedPassage } from "@workspace/bible"
+import { BrandMark } from "@/components/brand-mark"
 import { Badge } from "@workspace/ui/components/badge"
 import { Button } from "@workspace/ui/components/button"
 import {
@@ -257,8 +257,8 @@ export function VerseImageTool() {
       <div className="mx-auto flex min-h-svh w-full max-w-[1500px] flex-col">
         <header className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-4">
           <div className="flex min-w-0 items-center gap-2">
-            <div className="flex size-8 items-center justify-center rounded-lg bg-white text-[#111]">
-              <HugeiconsIcon icon={BookOpen02Icon} strokeWidth={2} />
+            <div className="flex size-8 items-center justify-center rounded-lg bg-[#ffa500]">
+              <BrandMark width={22} />
             </div>
             <div className="min-w-0">
               <h1 className="truncate text-sm font-semibold">Youversly</h1>
